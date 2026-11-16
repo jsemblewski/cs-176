@@ -2,72 +2,88 @@
 package edu.monmouth.campusvehicle;
 
 public class CampusVehicle {
+
     private String id;
     private String location;
     private Color color;
     private boolean available;
 
-    private final String DEFAULT_ID = "UNKNOWN";
-    private final String DEFAULT_LOCATION = "UNKNOWN";
-    private final boolean DEFAULT_AVAILABLE = true;
-    private final Color DEFAULT_COLOR = Color.unknown;
-
     public CampusVehicle() {
-        setId(DEFAULT_ID);
-        setLocation(DEFAULT_LOCATION);
-        setAvailable(DEFAULT_AVAILABLE);
-        setColor(color);
+        setId(CampusVehicleConstants.DEFAULT_ID);
+        setLocation(CampusVehicleConstants.DEFAULT_LOCATION);
+        setAvailable(CampusVehicleConstants.DEFAULT_AVAILABLE);
+        setColor(CampusVehicleConstants.DEFAULT_COLOR);
     }
 
     public CampusVehicle(String id, String location, boolean available) {
-        this(id, location, available, Color.unknown);
+        this(id, location, available, CampusVehicleConstants.DEFAULT_COLOR);
     }
 
-    // New four-argument constructor
     public CampusVehicle(String id, String location,
                          boolean available, Color color) {
+
         setId(id);
         setLocation(location);
         setAvailable(available);
         setColor(color);
-}
+    }
 
     public String getId() {
         return id;
     }
-    
+
     public void setId(String id) {
-    if (id == null
-            || id.isEmpty()
-            || id.length() < 6
-            || id.length() > 18
-            || !id.toUpperCase().startsWith("MU")) {
-        this.id = DEFAULT_ID;
-    } else {
-        this.id = id.toLowerCase();
+
+        if (id == null
+                || id.length() < CampusVehicleConstants.MIN_ID_LENGTH
+                || id.length() > CampusVehicleConstants.MAX_ID_LENGTH
+                || !id.toUpperCase().startsWith(CampusVehicleConstants.ID_PREFIX)) {
+
+            this.id = CampusVehicleConstants.DEFAULT_ID;
+
+        } else {
+            this.id = id.toLowerCase();
+        }
     }
-}
-
-
 
     public String getLocation() {
         return location;
     }
 
-
     public void setLocation(String location) {
-    	if (location != null
-            && (location.equalsIgnoreCase("Library")
-            || location.equalsIgnoreCase("University Bluffs")
-            || location.equalsIgnoreCase("Parking Lot")
-            || location.equalsIgnoreCase("Spruce Hall")
-            || location.equalsIgnoreCase("Laurel Hall"))) {
-        this.location = location.toLowerCase();
-    } else {
-        this.location = DEFAULT_LOCATION;
-    }
-}
 
+        boolean valid = false;
+
+        if (location != null) {
+
+            for (String validLocation : CampusVehicleConstants.VALID_LOCATIONS) {
+
+                if (location.equalsIgnoreCase(validLocation)) {
+                    valid = true;
+                    break;
+                }
+            }
+        }
+
+        if (valid) {
+            this.location = location.toLowerCase();
+        } else {
+            this.location = CampusVehicleConstants.DEFAULT_LOCATION;
+        }
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+
+        if (color == null) {
+            this.color = CampusVehicleConstants.DEFAULT_COLOR;
+        } else {
+            this.color = color;
+        }
+    }
 
     public boolean isAvailable() {
         return available;
@@ -76,26 +92,12 @@ public class CampusVehicle {
     public void setAvailable(boolean available) {
         this.available = available;
     }
-    
-    public Color getColor( ) {
-    	return color;
-    	
-    }
-    public void setColor(Color color) {
-        if (color == null) {
-            this.color = DEFAULT_COLOR;
-        } else {
-            this.color = color;
-        }
-    }
-
 
     public void checkOut() {
         if (available) {
             available = false;
         }
     }
-
 
     public void returnVehicle() {
         available = true;
